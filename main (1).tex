@@ -1,0 +1,422 @@
+\documentclass[11pt]{article}
+
+\usepackage[review]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+
+\title{SymTrust: Symbolic Methods for Trustworthy and Verifiable Reasoning}
+
+\author{Anonymous Authors}
+\definecolor{darkblue}{rgb}{0, 0, 0.5}
+\hypersetup{colorlinks=true, citecolor=darkblue, linkcolor=darkblue, urlcolor=darkblue}
+\newcommand{\pk}[1]{{\textcolor{red}{~(PK: #1)}}}
+\newcommand{\tp}[1]{{\textcolor{orange}{~(TP: #1)}}}
+\newcommand{\sr}[1]{{\textcolor{blue}{~(SR: #1)}}}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Large language models are now used in many important areas, making it essential to know when their outputs can be trusted \citep{chen-etal-2024-critical,zhang-etal-2024-comprehensive-survey,zeng-etal-2023-robotics}. However, correct answers may still follow flawed reasoning \citep{wang-etal-2025-chain}. Verifying how models reach their answers has therefore become necessary. Buidling on this, we ask a central question: how can we determine whether an answer is supported by reliable reasoning rather than merely appearing correct?
+One promising direction is to use methods that make reasoning easier to inspect and verify. A growing body of work explores symbolic and structured methods, including rules, constraints, programs, graphs, knowledge bases, and diagrams. These methods can improve model reasoning and express relevant information and relations in forms that support evaluation and verification \citep{pan-etal-2023-logic,olausson-etal-2023-linc,pei-etal-2025-fover}. \textbf{SymTRUST} focuses on the connection between trustworthy AI and symbolic and structured methods. The workshop asks: how can these methods help us improve and verify model reasoning and build more reliable, understandable, and trustworthy AI systems? We invite researchers working across domains, modalities, and reasoning tasks to discuss new methods, evaluations, benchmarks, applications, and open challenges at the intersection of trustworthy AI, symbolic reasoning, and structured representations.
+\end{abstract}
+
+\section{Introduction}
+Foundation models can now solve many difficult tasks involving language,
+images, science, and decision-making. However, a correct answer alone does
+not prove that a model followed a reliable reasoning process. Models can
+reach correct answers despite mistakes in their intermediate reasoning
+\citep{wang-etal-2025-chain}. They can also produce convincing explanations
+that do not faithfully show what influenced their answers
+\citep{turpin-etal-2023-language,shailya-etal-2025-lext}. Their performance
+may change when a question is reworded, irrelevant information is added,
+or the same problem is presented using another representation or modality
+\citep{mirzadeh-etal-2024-gsm,dagan-etal-2025-cast,
+rajpal-etal-2026-spatial}. Looking only at the final answer is therefore
+not enough to decide whether a model's reasoning can be trusted. We need
+methods that can verify whether an answer is supported by valid reasoning,
+relevant evidence, and the requirements of the task.
+
+Symbolic and structured methods offer a promising way to support this
+verification. Symbolic methods represent knowledge and reasoning through
+explicit concepts, relations, rules, constraints, or programs. Structured
+methods organize information through graphs, tables, diagrams, grids,
+schemas, or knowledge bases. Compared with free-form natural-language
+explanations, these methods can make the information, relations, and rules
+behind an answer more explicit. This makes it easier to inspect the
+reasoning, identify failures, and check model outputs against external
+tools, formal rules, supporting evidence, or known constraints
+\citep{pan-etal-2023-logic,olausson-etal-2023-linc,
+pei-etal-2025-fover}. In this way, symbolic and structured methods can help
+us study and improve a central aspect of trustworthy AI: whether a model's
+answer can be independently understood and verified.
+
+TIES brings together research on trustworthy AI,
+symbolic and neuro-symbolic reasoning, multimodal reasoning,
+interpretability, formal verification, model probing, and human-centered
+explanations. \sr{ do we bring trust first and then symbolic?: The workshop asks: \textbf{How can symbolic and structured
+methods help us improve and verify model reasoning and build systems whose
+behavior is more reliable, understandable, and trustworthy?}} We welcome
+work from any domain, including law, finance, medicine, science,
+mathematics, vision, robotics, and commonsense reasoning. Submissions may
+present new methods, theories, datasets, benchmarks, evaluations,
+applications, position papers, or analyses of model failures.
+\paragraph{Workshop Goals and Distinction}
+
+TIES focuses on a specific question at the intersection of trustworthy
+AI and symbolic reasoning: when does making a model's reasoning explicit
+actually make that reasoning more trustworthy? The workshop does not
+assume that symbolic or structured representations are inherently
+faithful. A generated proof may be logically valid but based on an
+incorrect formalization; a graph may omit relevant evidence; and a
+program may produce the correct answer while encoding the wrong
+interpretation of the problem. TIES therefore studies both the promise
+and the limitations of explicit representations as mechanisms for
+improving, inspecting, and independently verifying model reasoning.
+
+This focus distinguishes TIES from broader workshops on trustworthy NLP
+and neuro-symbolic AI. Rather than addressing trustworthiness or
+neuro-symbolic integration in general, TIES centers the relationship
+between explicit structure and verifiable reasoning. It brings together
+researchers developing symbolic methods with researchers studying
+faithfulness, robustness, interpretability, evaluation, and
+human-centered explanations.
+
+\paragraph{Topics of Interest}
+
+We invite archival and non-archival submissions on topics including, but
+not limited to:
+
+\begin{itemize}[leftmargin=12pt,noitemsep,topsep=1pt]
+    \item generation and verification of formal or structured reasoning traces;
+    \item neuro-symbolic and solver-augmented language models;
+    \item rules, constraints, programs, graphs, knowledge bases, proofs, tables, and diagrams as reasoning representations;
+    \item faithfulness and validity of structured explanations;
+    \item autoformalization and failures in translating language into symbolic representations;
+    \item reasoning across language, visual, spatial, and symbolic modalities;
+    \item adaptive selection or switching between reasoning representations;
+    \item formal verification and external tool use for model evaluation;
+    \item robustness under paraphrases, counterfactuals, irrelevant information, and representation changes;
+    \item evaluation metrics for reasoning validity, evidence support, calibration, and answer--trace consistency;
+    \item human evaluation and human use of structured model explanations;
+    \item multilingual and cross-domain structured reasoning;
+    \item applications in law, medicine, finance, science, mathematics, robotics, and other high-stakes settings;
+    \item analyses and negative results showing when explicit structure fails to improve reliability or trustworthiness.
+\end{itemize}
+
+\paragraph{Submission Types and Review}
+
+TIES will welcome archival long papers of up to eight pages and short
+papers of up to four pages, excluding references, following the ACL
+formatting guidelines. We will also welcome two-page non-archival
+extended abstracts describing ongoing work, position papers, recently
+published work, datasets, system demonstrations, and negative results.
+Non-archival submissions will be presented at the workshop but will not
+be included in the archival proceedings.
+
+We plan to accept both papers carrying completed ACL Rolling Review
+reviews and papers submitted directly through OpenReview. Each direct
+archival submission will receive three reviews. All accepted
+contributions will be presented during one of two poster sessions.
+Based on review quality, relevance, and topical diversity, selected
+submissions will also be invited for oral presentation.
+
+% ============================================================
+% COMMENTED-OUT SHARED EVALUATION CHALLENGE
+% Keep this section in the source in case it is added later.
+% ============================================================
+
+% \iffalse
+
+% \paragraph{TIES Shared Evaluation Challenge}
+
+% We plan to organize a shared evaluation challenge on
+% \textit{Verifiable Reasoning Across Representations}. The challenge will
+% evaluate whether systems can produce not only correct answers but also
+% structured traces that provide independently checkable support for
+% those answers.
+
+% Each instance will contain a problem, a question, and identifiable
+% supporting information. Equivalent instances may be presented in
+% natural language and in a structured representation such as a set of
+% rules, a graph, a table, or a spatial configuration. Participating
+% systems will be asked to produce: (i) a final answer; (ii) a
+% machine-readable reasoning trace; (iii) references to the evidence or
+% constraints supporting individual steps; and, where appropriate, (iv)
+% an uncertainty or abstention decision.
+
+% The initial challenge will focus on spatial and rule-governed reasoning,
+% where important parts of a trace can be verified programmatically.
+% Evaluation will consider final-answer accuracy, structural validity,
+% logical or executable correctness, evidence support, answer--trace
+% consistency, and consistency across equivalent representations. Human
+% annotations will provide reference answers, evidence links, and valid
+% inference relations. Deterministic verification will be used wherever
+% possible, with human evaluation used for semantic judgments that cannot
+% be reduced to rule execution. LLM-based judging, if studied, will be
+% reported only as a secondary evaluation rather than as the primary
+% source of correctness.
+
+% We anticipate participation from approximately 10--15 teams. Challenge
+% results, baseline systems, annotation guidelines, and lessons about
+% evaluating multiple valid reasoning traces will be discussed in a
+% dedicated workshop session.
+
+% \fi
+
+\paragraph{Workshop Format}
+
+TIES is proposed as a one-day workshop consisting of three invited
+talks, selected oral presentations, two poster sessions, and a panel
+discussion. The invited talks will provide complementary perspectives
+on neuro-symbolic reasoning, trustworthy and interpretable AI, and the
+evaluation of model reasoning. Oral presentations will highlight
+selected archival and non-archival submissions.
+
+The two poster sessions will provide substantial time for interaction
+between participants and will ensure that every accepted submission
+receives visibility. The concluding panel will bring together invited
+speakers, organizers, and selected participants to address the
+question: \textit{When does explicit structure provide genuine evidence
+for trustworthy reasoning, and when does it merely create the
+appearance of reliability?}
+
+\paragraph{Tentative Invited Speakers}
+
+We plan to invite three speakers whose expertise covers the central
+perspectives represented by TIES:
+
+\begin{itemize}[leftmargin=12pt,noitemsep,topsep=1pt]
+    \item Hima Lakkaraju, Harvard University --- trustworthy and
+          interpretable AI, explanation faithfulness, and reliable
+          foundation models;
+    \item Andr\'e Freitas, University of Manchester and Idiap Research
+          Institute --- neuro-symbolic NLP, formal representations, and
+          controlled inference;
+    \item Isabelle Augenstein, University of Copenhagen --- trustworthy
+          NLP, evidence-grounded evaluation, factuality, and
+          explainability.
+\end{itemize}
+
+All listed speakers are tentative. The complimentary workshop
+registration provided by ACL will be allocated to one invited speaker.
+Other speakers may participate remotely or through independently
+secured support; no additional travel funding is currently committed.
+
+\paragraph{Expected Participation and Outreach}
+
+As a first-edition workshop connecting several active research
+communities, we expect approximately 60--80 participants at peak
+attendance, including authors, invited speakers, and researchers from
+neighboring areas. We anticipate approximately 20--25 archival
+submissions and 10--15 non-archival extended abstracts.
+
+The Call for Papers will be distributed through ACL mailing lists,
+relevant Special Interest Groups, neuro-symbolic AI and trustworthy AI
+communities, academic and industry research networks, and social-media
+channels. Organizers will also contact groups working on formal
+reasoning, model explanations, multimodal reasoning, verification, and
+high-stakes applications.
+
+\paragraph{Hybrid Participation Plan}
+
+To support productive participation regardless of attendance mode,
+invited and oral presentations will support live remote presentation
+when required, with prerecorded talks collected as technical backups.
+Remote participants will be able to submit questions through a
+moderated channel and join the panel discussion.
+
+Posters and supplementary materials will be made available through the
+workshop website, with dedicated virtual discussion spaces for remote
+attendees. Session chairs will monitor both in-person and online
+questions to ensure that remote participation is not treated as a
+separate or secondary track.
+
+\paragraph{Diversity and Inclusion}
+
+TIES will pursue diversity across gender, geography, ethnicity,
+institution type, career stage, research methodology, and application
+domain. We will seek balanced representation among organizers, invited
+speakers, panelists, and Program Committee members, including
+researchers who have not repeatedly served as keynote speakers or
+panelists at recent major conferences.
+
+Our outreach will include relevant ACL affinity groups, student
+communities, researchers from underrepresented regions, and groups
+working on multilingual and low-resource reasoning. The workshop will
+welcome non-archival work and extended abstracts to reduce barriers for
+early-stage researchers and participants whose work does not fit
+standard archival formats. Early-career researchers will be considered
+for oral presentations, panel participation, and poster spotlights.
+Speakers will be encouraged to use accessible slides, and online
+materials will be provided in formats compatible with assistive
+technologies.
+
+The workshop will follow the ACL anti-harassment policy. Organizers will
+identify clear points of contact for reporting concerns and will act
+promptly to maintain a respectful and inclusive environment.
+
+\paragraph{Technical and Special Requirements}
+
+TIES requires standard audiovisual equipment for presentations, poster
+space, reliable internet access, and video-conferencing support for
+hybrid participation. A room layout supporting poster sessions and
+audience discussion would be beneficial. The workshop does not require
+specialized on-site computing infrastructure.
+
+\paragraph{Previous Editions}
+
+TIES is a first-edition workshop. Although the workshop has not
+previously been held under this title, the organizing team has research
+and organizational experience spanning trustworthy AI,
+neuro-symbolic learning, structured and multimodal reasoning,
+explanation evaluation, and major NLP and AI venues. Relevant
+individual experience is described in the supplementary organizer
+information.
+
+\paragraph{Tentative Schedule}
+
+The proposed schedule for the one-day workshop is shown in
+Table~\ref{tab:ties-schedule}. The schedule allocates substantial time
+to poster presentations and discussion while balancing invited and
+contributed research.
+
+\begin{table}[t]
+    \small
+    \centering
+    \renewcommand{\arraystretch}{1.08}
+    \begin{tabular}{p{0.16\linewidth}p{0.72\linewidth}}
+        \toprule
+        Time & Session \\
+        \midrule
+        09:00--09:15 & Opening Remarks and Workshop Framing \\
+        09:15--10:00 & Invited Talk 1 \\
+        10:00--11:00 & Oral Presentations: Methods and Representations \\
+        11:00--12:00 & Poster Session 1 and Coffee Break \\
+        12:00--12:45 & Invited Talk 2 \\
+        12:45--14:00 & Lunch Break \\
+        14:00--15:00 & Oral Presentations: Evaluation and Applications \\
+        15:00--16:00 & Poster Session 2 and Coffee Break \\
+        16:00--16:45 & Invited Talk 3 \\
+        16:45--17:45 & Panel Discussion and Audience Q\&A \\
+        17:45--18:00 & Closing Remarks \\
+        \bottomrule
+    \end{tabular}
+    \caption{Tentative schedule for the one-day TIES workshop.}
+    \label{tab:ties-schedule}
+\end{table}
+
+% ============================================================
+% SUPPLEMENTARY INFORMATION
+% The material below belongs in the two supplementary pages.
+% ============================================================
+
+\newpage
+\section*{Supplementary Information}
+
+\paragraph{Organizing Committee}
+
+\subparagraph{Shreya Rajpal}
+\phantom{ }\\
+\indent Affiliation: Michigan State University\\
+\indent E-mail: \texttt{[EMAIL]}\\
+\indent Website: \url{[WEBSITE]}
+
+Shreya Rajpal is a Ph.D. student in Computer Science at Michigan State
+University. Her research focuses on trustworthy AI, explanation
+evaluation, neuro-symbolic reasoning, and reasoning across language and
+structured or visual representations. 
+% Her work includes the LExT
+% framework for evaluating the trustworthiness of natural-language
+% explanations and research on adaptive switching between linguistic and
+% symbolic representations for spatial reasoning. 
+She has held technical
+leadership roles in student and professional research communities and
+has experience presenting work at ACL-affiliated and interdisciplinary
+AI venues.
+
+\subparagraph{Parisa Kordjamshidi}
+\phantom{ }\\
+\indent Affiliation: Michigan State University\\
+\indent E-mail: \texttt{kordjams@msu.edu}\\
+\indent Website:
+\url{https://www.cse.msu.edu/~kordjams/}
+
+Parisa Kordjamshidi is an Associate Professor of Computer Science and
+Engineering at Michigan State University. Her research focuses on
+natural language processing, multimodal reasoning, and neuro-symbolic
+methods for integrating structured knowledge with neural models. She
+has organized workshops at ACL, EMNLP, NAACL, AAAI, IJCAI, and NeurIPS
+and has held senior organizational and editorial roles in major NLP and
+AI venues. Her expertise provides the workshop with both a strong
+technical foundation and extensive experience in community
+organization.
+
+% Add at least two external organizers. Ideally include:
+% 1. a senior researcher in trustworthy or interpretable AI;
+% 2. a researcher in formal or neuro-symbolic reasoning;
+% 3. optionally, an industry or high-stakes-domain researcher.
+
+% \subparagraph{[External Organizer 1]}
+% \phantom{ }\\
+% \indent Affiliation: [AFFILIATION]\\
+% \indent E-mail: \texttt{[EMAIL]}\\
+% \indent Website: \url{[WEBSITE]}
+
+% [Two to five sentences describing the organizer's research expertise,
+% connection to TIES, and experience organizing workshops or related
+% events.]
+
+% \subparagraph{[External Organizer 2]}
+% \phantom{ }\\
+% \indent Affiliation: [AFFILIATION]\\
+% \indent E-mail: \texttt{[EMAIL]}\\
+% \indent Website: \url{[WEBSITE]}
+
+% [Two to five sentences describing the organizer's research expertise,
+% connection to TIES, and experience organizing workshops or related
+% events.]
+
+\paragraph{Program Committee and Review Capacity}
+
+We expect approximately 25--35 archival submissions. To provide three
+reviews per paper while assigning no reviewer more than three papers,
+we will recruit approximately 35--40 Program Committee members. The
+committee will represent expertise in formal reasoning, neuro-symbolic
+learning, interpretability, multimodal reasoning, evaluation, and
+high-stakes applications. It will also reflect geographic,
+institutional, demographic, and career-stage diversity.
+
+% \begin{itemize}[leftmargin=12pt,noitemsep,topsep=1pt]
+%     \item [NAME, AFFILIATION] --- [agreed/tentative]
+%     \item [NAME, AFFILIATION] --- [agreed/tentative]
+%     \item [NAME, AFFILIATION] --- [agreed/tentative]
+%     \item [NAME, AFFILIATION] --- [agreed/tentative]
+%     \item [NAME, AFFILIATION] --- [agreed/tentative]
+%     \item [Continue until approximately 35--40 members]
+% \end{itemize}
+
+\paragraph{Review Platform}
+
+TIES will use OpenReview for direct workshop submissions and will also
+consider papers submitted with completed ACL Rolling Review reviews.
+Direct archival submissions will receive three reviews. Non-archival
+extended abstracts will receive a lighter review focused on relevance,
+clarity, and potential to contribute to workshop discussion. Conflicts
+of interest will be managed according to ACL policies.
+
+% \paragraph{Concurrent Proposals}
+
+% % Replace this statement after checking with every organizer.
+% No organizer is currently involved in another workshop proposal for the
+% 2027 ACL conference cycle.
+
+
+
+\bibliography{references}
+\bibliographystyle{acl_natbib}
+
+\end{document}
